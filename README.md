@@ -4,13 +4,13 @@ This article can be interesting not only for mathematicians, who are interested 
 
 ### Table of Contents
 
-- [First order ODE](#FirstorderODE)
-- [Second order ODE](#SecondorderODE)
-- [Partial differential equation](#Partialdifferentialequation)
+- [First order ODE](#FirstOrderODE)
+- [Second order ODE](#SecondOrderODE)
+- [Partial differential equation](#PartialDifferentialEquation)
 - [Conclusions](#Conclusions)
 - [References](#References)
 
-### First order ODE
+### FirstOrderODE
 
 We will start with simple ordinary differential equation (ODE) in the form of <br>
     <p align="center"><img 
@@ -88,7 +88,7 @@ Result of training neural network for 1000 iterations with final mean squared er
 
 Just for fun I compared NN solution with finite differences one and we can see, that simple neural network without any parameters optimization works already better. Full code you can find [here](https://github.com/L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation/blob/main/ODE%20example.ipynb).
 
-### Second order ODE
+### SecondOrderODE
 Now we can go further and extend our solution to second-order equations:
 
 <p align="center"><img 
@@ -138,7 +138,7 @@ def loss_function(W, x):
  
 You can get full code of this example from [here](https://github.com/L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation/blob/main/ODE%202%20example.ipynb).
  
-### Partial differential equation
+### PartialDifferentialEquation
 The most interesting processes are described with partial differential equations (PDEs), that can have the following form:
 
 <p align="center"><img 
