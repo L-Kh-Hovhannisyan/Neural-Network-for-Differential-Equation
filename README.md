@@ -10,18 +10,18 @@ The main question is how to transform equation integration problem in optimizati
 
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*1oHXOKs3nGmq1mL6HcFlOg.png"
-      alt="html5" width="360" height="60" /></p>
+      alt="html5" width="385" height="60" /></p>
 
 In the proposed approach the trial solution Ψt employs a feedforward neural network and the parameters p correspond to the weights and biases of the neural architecture. In this work we omit biases for simplicity. We choose a form for the trial function Ψt(x) such that by construction satisfies the BCs. This is achieved by writing it as a sum of two terms:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/572/1*BVdGC_YhEIBrbJeG5NOIsA.png"
-      alt="html5" width="245" height="40" /></p>
+      alt="html5" width="245" height="35" /></p>
 where N(x, p) is a neural network of arbitrary architecture, weights of wich should be learnt to approximate the solution. For example in case of ODE, the trial solution will look like:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/427/1*yEQdMhnQ8idkk6XgYKVjsQ.png"
-      alt="html5" width="255" height="50" /></p>
+      alt="html5" width="240" height="40" /></p>
 
 And particular minimization problem to be solved is:
 
@@ -66,7 +66,7 @@ for i in range(1000):
 
 <p align="center"><img 
       src="https://miro.medium.com/max/655/1*OWbwgYIEU0dhVWmpug9QNw.png"
-      alt="html5" width="355" height="60" /></p>
+      alt="html5" width="390" height="60" /></p>
     
 We set up a grid [0, 1] with 10 points on it, BC is Ψ(0) = 1.
 Result of training neural network for 1000 iterations with final mean squared error (MSE) of 0.0962 you can see on the image:
