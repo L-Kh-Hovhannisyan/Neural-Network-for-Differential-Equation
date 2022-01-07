@@ -80,15 +80,12 @@ Now we can go further and extend our solution to second-order equations:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/421/1*Ns0Cn2_BQee_m1pAJSZM2A.png"
-      alt="html5" width="180" height="43" /></p> 
-      <br>
+      alt="html5" width="150" height="55" /></p>
       
-that can have following trial solution (in case of two-point Dirichlet conditions)
-<br>
-
+that can have following trial solution (in case of two-point Dirichlet conditions
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*StrdqlwYgvY3iIQaAVVeFA.png"
-      alt="html5" width="255" height="50" /></p> 
+      alt="html5" width="255" height="55" /></p> 
 
 Taking derivatives of Ψt is getting harder and harder, so we will use Autograd more often:
 
@@ -125,6 +122,129 @@ def loss_function(W, x):
  
  ![equation](https://miro.medium.com/max/523/1*-wt5d2CN5xjBQwd_V-8W0w.png)
  
- You can get full code of this example from here.
+You can get full code of this example from here.
+ 
 ### Partial differential equation
 The most interesting processes are described with partial differential equations (PDEs), that can have the following form:
+
+<p align="center"><img 
+      src="https://miro.medium.com/max/630/1*QTykgqrsm4mXEA9zvzDmhA.png"
+      alt="html5" width="205" height="55" /></p>
+ In this case trial solution can have the following form (still according to paper (1)):
+ 
+ <p align="center"><img 
+      src="https://miro.medium.com/max/700/1*uIR0ISRA-s9KCzEYngS0EA.png"
+      alt="html5" width="205" height="55" /></p>
+ 
+And minimization problem turns into following:
+
+<p align="center"><img 
+      src="https://miro.medium.com/max/700/1*YOKJZE-dK8GfBKJiFutU6w.png"
+      alt="html5" width="205" height="55" /></p>
+      
+The biggest problem that is occurring here — numerical instability of calculations — I compared taken by hand derivatives of Ψt(x) with finite difference and Autograd and sometimes Autograd tended to fail, but we still gonna use it for simplicity of implementation for now.
+Let’s try to solve a problem from paper (3):
+
+<p align="center"><img 
+      src="https://miro.medium.com/max/387/1*yHkMBhVaLuYAlfRxB6bZLw.png"
+      alt="html5" width="205" height="55" /></p>
+ With following BCs:
+ 
+ <p align="center"><img 
+      src="https://miro.medium.com/max/700/1*AkHhKxnmoLqpaJ6YXYrs0Q.png"
+      alt="html5" width="205" height="55" /></p>
+ 
+ And the trial solution will take form of:
+ 
+ <p align="center"><img 
+      src="https://miro.medium.com/max/700/1*GcSAym-Sh1MJbSTEJihQ-A.png"
+      alt="html5" width="205" height="55" /></p>
+ Let’s have a look on analytical solution first:
+ 
+ ```
+ def analytic_solution(x):
+    return (1 / (np.exp(np.pi) - np.exp(-np.pi))) * \
+            np.sin(np.pi * x[0]) * (np.exp(np.pi * x[1]) - np.exp(-np.pi * x[1]))
+    
+surface = np.zeros((ny, nx))
+for i, x in enumerate(x_space):
+    for j, y in enumerate(y_space):
+        surface[i][j] = analytic_solution([x, y])
+        
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+X, Y = np.meshgrid(x_space, y_space)
+surf = ax.plot_surface(X, Y, surface, rstride=1, cstride=1, cmap=cm.viridis,
+        linewidth=0, antialiased=False)
+ax.set_xlim(0, 1)
+ax.set_ylim(0, 1)
+ax.set_zlim(0, 2)
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$');
+```
+
+<p align="center"><img 
+      src="https://miro.medium.com/max/484/1*EQZYsvOCDtliRUCVLc8qaQ.png"/></p>
+ 
+ To define minimization problem with partial derivatives we can apply Autograd’s jacobian twice to get them:
+ 
+ ```
+ def loss_function(W, x, y):
+    loss_sum = 0.
+    
+    for xi in x:
+        for yi in y:
+            
+            input_point = np.array([xi, yi])
+            net_out = neural_network(W, input_point)[0]
+           net_out_jacobian = jacobian(neural_network_x)(input_point)
+            net_out_hessian = jacobian(jacobian(neural_network_x))(input_point)
+            
+            psy_t = psy_trial(input_point, net_out)
+            psy_t_jacobian = jacobian(psy_trial)(input_point, net_out)
+            psy_t_hessian = jacobian(jacobian(psy_trial))(input_point, net_out)
+            gradient_of_trial_d2x = psy_t_hessian[0][0]
+            gradient_of_trial_d2y = psy_t_hessian[1][1]
+            func = f(input_point) # right part function
+            err_sqr = ((gradient_of_trial_d2x + gradient_of_trial_d2y) - func)**2
+            loss_sum += err_sqr
+        
+    return loss_sum
+ ```
+ This code looks a bit bigger, because we are working on 2D grid and need a bit more derivatives, but it’s anyway cleaner than possible mess with analytical, symbolical or numerical derivatives.
+Let’s train a network on this model. Now architecture changed, but just in the input — now we have two input nodes: for x and y coordinate of a 2D mesh.
+These computations should take some time, so I trained just for 100 iterations:
+
+<p align="center"><img 
+      src="https://miro.medium.com/max/968/1*EQZYsvOCDtliRUCVLc8qaQ.png"/></p>
+      
+<p align="center"><img 
+      src="https://miro.medium.com/max/968/1*YZ4qBfYLTWUjeYJKJnNTxQ.png"/></p>
+      
+Solutions look almost the same, so it can be interesting to see the error surface:
+      
+ <p align="center"><img 
+      src="https://miro.medium.com/max/968/1*gHlWdlv2bhiii69geJuEWw.png"/></p>
+      
+ Full code you can check here.
+ 
+### Conclusions
+Indeed, neural networks are a Holy Graal of modern computations in totally different areas. In this post we checked a bit unusual application for solving ODEs and PDEs with very simple feed-forward networks. We also used Autograd for taking derivatives which is very easy to exploit.
+The benefits of this approach I will gently copy from paper (1):
+The solution via ANN’s is a differentiable, closed analytic form easily used in any subsequent calculation.
+Such a solution is characterized by the generalization properties of neural networks, which are known to be superior. (Comparative results presented in this work illustrate this point clearly.)
+The required number of model parameters is far less than any other solution technique and therefore, compact solution models are obtained, with very low demand on memory space.
+The method is general and can be applied to ODEs, systems of ODEs and to PDEs as well.
+The method can also be efficiently implemented on parallel architectures.
+I see following ways to improve obtained results:
+Use convolutional neural network on a mini-grid of neighbor points
+Apply more efficient optimization method with: a) gradient checking b) adaptive learning rate update
+Play a bit with regularization
+And of course it can be interesting to solve other PDEs or maybe even SDEs with this approach.
+ 
+ 
+I will omit lot of theoretical moments and concentrate on computational process, more details you can check in following papers:
+Artificial Neural Networks for Solving Ordinary and Partial Differential Equations, I. E. Lagaris, A. Likas and D. I. Fotiadis, 1997
+Artificial Neural Networks Approach for Solving Stokes Problem, Modjtaba Baymani, Asghar Kerayechian, Sohrab Effati, 2010
+Solving differential equations using neural networks, M. M. Chiaramonte and M. Kiener, 2013
+
