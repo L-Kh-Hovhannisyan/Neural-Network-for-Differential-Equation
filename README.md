@@ -71,7 +71,8 @@ for i in range(1000):
 We set up a grid [0, 1] with 10 points on it, BC is Ψ(0) = 1.
 Result of training neural network for 1000 iterations with final mean squared error (MSE) of 0.0962 you can see on the image:
 
-![equation](https://miro.medium.com/max/523/1*bYSwVxHdsrbSyFfYjwIcqg.png)
+ <p align="center"><img 
+      src="https://miro.medium.com/max/523/1*bYSwVxHdsrbSyFfYjwIcqg.png"/></p>
 
 Just for fun I compared NN solution with finite differences one and we can see, that simple neural network without any parameters optimization works already better. Full code you can find here.
 
@@ -119,8 +120,9 @@ def loss_function(W, x):
  <p align="center"><img 
       src="https://miro.medium.com/max/349/1*rQbWISu5YO1TK6ypqEr8Tw.png"
       alt="html5" width="205" height="55" /></p>
- 
- ![equation](https://miro.medium.com/max/523/1*-wt5d2CN5xjBQwd_V-8W0w.png)
+      
+  <p align="center"><img 
+      src="https://miro.medium.com/max/523/1*-wt5d2CN5xjBQwd_V-8W0w.png"/></p> 
  
 You can get full code of this example from here.
  
@@ -129,36 +131,36 @@ The most interesting processes are described with partial differential equations
 
 <p align="center"><img 
       src="https://miro.medium.com/max/630/1*QTykgqrsm4mXEA9zvzDmhA.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="305" height="65" /></p>
  In this case trial solution can have the following form (still according to paper (1)):
  
  <p align="center"><img 
       src="https://miro.medium.com/max/700/1*uIR0ISRA-s9KCzEYngS0EA.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="365" height="45" /></p>
  
 And minimization problem turns into following:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*YOKJZE-dK8GfBKJiFutU6w.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="405" height="65" /></p>
       
 The biggest problem that is occurring here — numerical instability of calculations — I compared taken by hand derivatives of Ψt(x) with finite difference and Autograd and sometimes Autograd tended to fail, but we still gonna use it for simplicity of implementation for now.
 Let’s try to solve a problem from paper (3):
 
 <p align="center"><img 
       src="https://miro.medium.com/max/387/1*yHkMBhVaLuYAlfRxB6bZLw.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="180" height="45" /></p>
  With following BCs:
  
  <p align="center"><img 
       src="https://miro.medium.com/max/700/1*AkHhKxnmoLqpaJ6YXYrs0Q.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="550" height="70" /></p>
  
  And the trial solution will take form of:
  
  <p align="center"><img 
       src="https://miro.medium.com/max/700/1*GcSAym-Sh1MJbSTEJihQ-A.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="450" height="50" /></p>
  Let’s have a look on analytical solution first:
  
  ```
