@@ -1,33 +1,45 @@
 ## Ordinary differential equation
 
+This article can be interesting not only for mathematicians, who are interested in some fluid dynamics modelling, but for computer scientists, because there will be shown computational properties of neural networks and some useful computational differentiation tricks. You can extend approach described here to solve other modelling problems with DEs, linear ot non-linear equation systems and almost everywhere, where robust numerical solution is preferred.
+
+### Table of Contents
+
+- [First order ordinary differential equation](#Ordinary differential equation)
+- [Second order differential equation](#Second order differential equation)
+- [Partial differential equation](#Partial differential equation)
+- [Conclusions](#Conclusions)
+- [References](#References)
+
+### First order ordinary differential equation
+
 We will start with simple ordinary differential equation (ODE) in the form of <br>
     <p align="center"><img 
       src="https://miro.medium.com/max/315/1*pvjvF0Q7YZa58BwFwCf77w.png"
-      alt="html5" width="150" height="50" /></p>
+      alt="html5" width="160" height="50" /></p>
 
 We are interested in finding a numerical solution on a grid, approximating it with some neural network architecture. In this article we will use very simple neural architecture that consists of a single input neuron (or two for 2D problems), one hidden layer and one output neuron to predict value of a solution in exact point on a grid.
 The main question is how to transform equation integration problem in optimization one, e.g. minimizing the error between analytical (if it exists) and numerical solution, taking into account initial (IC) and boundary (BC) conditions. In paper (1) we can see that problem is transformed into the following system of equations:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*1oHXOKs3nGmq1mL6HcFlOg.png"
-      alt="html5" width="385" height="60" /></p>
+      alt="html5" width="395" height="60" /></p>
 
 In the proposed approach the trial solution Ψt employs a feedforward neural network and the parameters p correspond to the weights and biases of the neural architecture. In this work we omit biases for simplicity. We choose a form for the trial function Ψt(x) such that by construction satisfies the BCs. This is achieved by writing it as a sum of two terms:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/572/1*BVdGC_YhEIBrbJeG5NOIsA.png"
-      alt="html5" width="245" height="35" /></p>
+      alt="html5" width="255" height="35" /></p>
 where N(x, p) is a neural network of arbitrary architecture, weights of wich should be learnt to approximate the solution. For example in case of ODE, the trial solution will look like:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/427/1*yEQdMhnQ8idkk6XgYKVjsQ.png"
-      alt="html5" width="240" height="40" /></p>
+      alt="html5" width="250" height="40" /></p>
 
 And particular minimization problem to be solved is:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/672/1*ASrLCfwy6oZ9Y57xEmzhEQ.png"
-      alt="html5" width="355" height="60" /> </p>
+      alt="html5" width="365" height="60" /> </p>
 
 As we see, to minimize the error we need to calculate derivative of Ψt(x), our trial solution which contains neural network and terms that contain boundary conditions. In the paper (1) there is exact formula for NN derivatives, but whole trial solution can be too big to take derivatives by hand and hard-code them. We will use more elegant solution later, but for the first time we can code it:
 
@@ -66,7 +78,7 @@ for i in range(1000):
 
 <p align="center"><img 
       src="https://miro.medium.com/max/655/1*OWbwgYIEU0dhVWmpug9QNw.png"
-      alt="html5" width="390" height="60" /></p>
+      alt="html5" width="400" height="60" /></p>
     
 We set up a grid [0, 1] with 10 points on it, BC is Ψ(0) = 1.
 Result of training neural network for 1000 iterations with final mean squared error (MSE) of 0.0962 you can see on the image:
@@ -74,19 +86,19 @@ Result of training neural network for 1000 iterations with final mean squared er
  <p align="center"><img 
       src="https://miro.medium.com/max/523/1*bYSwVxHdsrbSyFfYjwIcqg.png"/></p>
 
-Just for fun I compared NN solution with finite differences one and we can see, that simple neural network without any parameters optimization works already better. Full code you can find here.
+Just for fun I compared NN solution with finite differences one and we can see, that simple neural network without any parameters optimization works already better. Full code you can find [here](https://github.com/L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation/blob/main/ODE%20example.ipynb).
 
 ### Second order differential equation
 Now we can go further and extend our solution to second-order equations:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/421/1*Ns0Cn2_BQee_m1pAJSZM2A.png"
-      alt="html5" width="150" height="55" /></p>
+      alt="html5" width="160" height="55" /></p>
       
 that can have following trial solution (in case of two-point Dirichlet conditions
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*StrdqlwYgvY3iIQaAVVeFA.png"
-      alt="html5" width="255" height="55" /></p> 
+      alt="html5" width="265" height="55" /></p> 
 
 Taking derivatives of Ψt is getting harder and harder, so we will use Autograd more often:
 
@@ -119,48 +131,48 @@ def loss_function(W, x):
  
  <p align="center"><img 
       src="https://miro.medium.com/max/349/1*rQbWISu5YO1TK6ypqEr8Tw.png"
-      alt="html5" width="205" height="55" /></p>
+      alt="html5" width="215" height="55" /></p>
       
   <p align="center"><img 
       src="https://miro.medium.com/max/523/1*-wt5d2CN5xjBQwd_V-8W0w.png"/></p> 
  
-You can get full code of this example from here.
+You can get full code of this example from [here](https://github.com/L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation/blob/main/ODE%202%20example.ipynb).
  
 ### Partial differential equation
 The most interesting processes are described with partial differential equations (PDEs), that can have the following form:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/630/1*QTykgqrsm4mXEA9zvzDmhA.png"
-      alt="html5" width="305" height="65" /></p>
+      alt="html5" width="315" height="65" /></p>
  In this case trial solution can have the following form (still according to paper (1)):
  
  <p align="center"><img 
       src="https://miro.medium.com/max/700/1*uIR0ISRA-s9KCzEYngS0EA.png"
-      alt="html5" width="365" height="45" /></p>
+      alt="html5" width="375" height="45" /></p>
  
 And minimization problem turns into following:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*YOKJZE-dK8GfBKJiFutU6w.png"
-      alt="html5" width="405" height="65" /></p>
+      alt="html5" width="415" height="65" /></p>
       
 The biggest problem that is occurring here — numerical instability of calculations — I compared taken by hand derivatives of Ψt(x) with finite difference and Autograd and sometimes Autograd tended to fail, but we still gonna use it for simplicity of implementation for now.
 Let’s try to solve a problem from paper (3):
 
 <p align="center"><img 
       src="https://miro.medium.com/max/387/1*yHkMBhVaLuYAlfRxB6bZLw.png"
-      alt="html5" width="180" height="45" /></p>
+      alt="html5" width="190" height="45" /></p>
  With following BCs:
  
  <p align="center"><img 
       src="https://miro.medium.com/max/700/1*AkHhKxnmoLqpaJ6YXYrs0Q.png"
-      alt="html5" width="550" height="70" /></p>
+      alt="html5" width="560" height="70" /></p>
  
  And the trial solution will take form of:
  
  <p align="center"><img 
       src="https://miro.medium.com/max/700/1*GcSAym-Sh1MJbSTEJihQ-A.png"
-      alt="html5" width="450" height="50" /></p>
+      alt="html5" width="460" height="50" /></p>
  Let’s have a look on analytical solution first:
  
  ```
@@ -221,32 +233,44 @@ These computations should take some time, so I trained just for 100 iterations:
       src="https://miro.medium.com/max/968/1*EQZYsvOCDtliRUCVLc8qaQ.png"/></p>
       
 <p align="center"><img 
-      src="https://miro.medium.com/max/968/1*YZ4qBfYLTWUjeYJKJnNTxQ.png"/></p>
+     Editing Neural-Network-for-Differential-Equation/README.md at main · L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation src="https://miro.medium.com/max/968/1*YZ4qBfYLTWUjeYJKJnNTxQ.png"/></p>
       
 Solutions look almost the same, so it can be interesting to see the error surface:
       
  <p align="center"><img 
       src="https://miro.medium.com/max/968/1*gHlWdlv2bhiii69geJuEWw.png"/></p>
       
- Full code you can check here.
+ Full code you can check [here](https://github.com/L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation/blob/main/PDE%20example.ipynb).
  
 ### Conclusions
-Indeed, neural networks are a Holy Graal of modern computations in totally different areas. In this post we checked a bit unusual application for solving ODEs and PDEs with very simple feed-forward networks. We also used Autograd for taking derivatives which is very easy to exploit.
+Indeed, neural networks are a Holy Graal of modern computations in totally different areas. 
+In this post we checked a bit unusual application for solving ODEs and PDEs with very simple feed-forward networks. We also used Autograd for taking derivatives which is very easy to exploit.
 The benefits of this approach I will gently copy from paper (1):
-The solution via ANN’s is a differentiable, closed analytic form easily used in any subsequent calculation.
-Such a solution is characterized by the generalization properties of neural networks, which are known to be superior. (Comparative results presented in this work illustrate this point clearly.)
-The required number of model parameters is far less than any other solution technique and therefore, compact solution models are obtained, with very low demand on memory space.
-The method is general and can be applied to ODEs, systems of ODEs and to PDEs as well.
-The method can also be efficiently implemented on parallel architectures.
+-  The solution via ANN’s is a differentiable, closed analytic form easily used in any subsequent calculation.
+-  Such a solution is characterized by the generalization properties of neural networks, which are known to be superior. (Comparative results presented in this work illustrate this point clearly.)
+-  The required number of model parameters is far less than any other solution technique and therefore, compact solution models are obtained, with very low demand on memory space.
+-  The method is general and can be applied to ODEs, systems of ODEs and to PDEs as well.
+-  The method can also be efficiently implemented on parallel architectures.
+
 I see following ways to improve obtained results:
-Use convolutional neural network on a mini-grid of neighbor points
-Apply more efficient optimization method with: a) gradient checking b) adaptive learning rate update
-Play a bit with regularization
+
+-  Use convolutional neural network on a mini-grid of neighbor points
+-  Apply more efficient optimization method with: a) gradient checking b) adaptive learning rate update
+-  Play a bit with regularization
+
 And of course it can be interesting to solve other PDEs or maybe even SDEs with this approach.
- 
+
+This article can be interesting not only for mathematicians, who are interested in some fluid dynamics modelling, but for computer scientists, because there will be shown computational properties of neural networks and some useful computational differentiation tricks. You can extend approach described here to solve other modelling problems with DEs, linear ot non-linear equation systems and almost everywhere, where robust numerical solution is preferred.
+
+### References
  
 I will omit lot of theoretical moments and concentrate on computational process, more details you can check in following papers:
-Artificial Neural Networks for Solving Ordinary and Partial Differential Equations, I. E. Lagaris, A. Likas and D. I. Fotiadis, 1997
-Artificial Neural Networks Approach for Solving Stokes Problem, Modjtaba Baymani, Asghar Kerayechian, Sohrab Effati, 2010
-Solving differential equations using neural networks, M. M. Chiaramonte and M. Kiener, 2013
+
+- <a href="https://arxiv.org/pdf/physics/9705023.pdf">Artificial Neural Networks for Solving Ordinary and Partial Differential Equations, I. E. Lagaris, A. Likas and D. I. Fotiadis, 1997</a>
+- <a href="https://file.scirp.org/pdf/AM20100400007_46529567.pdf">Artificial Neural Networks Approach for Solving Stokes Problem, Modjtaba Baymani, Asghar Kerayechian, Sohrab Effati, 2010</a>
+- <a href="http://cs229.stanford.edu/proj2013/ChiaramonteKiener-SolvingDifferentialEquationsUsingNeuralNetworks.pdf">Solving differential equations using neural networks, M. M. Chiaramonte and M. Kiener, 2013</a>
+
+
+
+
 
