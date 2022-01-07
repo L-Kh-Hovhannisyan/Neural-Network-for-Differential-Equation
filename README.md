@@ -4,13 +4,13 @@ This article can be interesting not only for mathematicians, who are interested 
 
 ### Table of Contents
 
-- [First order ordinary differential equation](#Ordinary differential equation)
-- [Second order differential equation](#Second order differential equation)
-- [Partial differential equation](#Partial differential equation)
+- [First order ODE](#FirstorderODE)
+- [Second order ODE](#SecondorderODE)
+- [Partial differential equation](#Partialdifferentialequation)
 - [Conclusions](#Conclusions)
 - [References](#References)
 
-### First order ordinary differential equation
+### First order ODE
 
 We will start with simple ordinary differential equation (ODE) in the form of <br>
     <p align="center"><img 
@@ -88,7 +88,7 @@ Result of training neural network for 1000 iterations with final mean squared er
 
 Just for fun I compared NN solution with finite differences one and we can see, that simple neural network without any parameters optimization works already better. Full code you can find [here](https://github.com/L-Kh-Hovhannisyan/Neural-Network-for-Differential-Equation/blob/main/ODE%20example.ipynb).
 
-### Second order differential equation
+### Second order ODE
 Now we can go further and extend our solution to second-order equations:
 
 <p align="center"><img 
