@@ -17,7 +17,7 @@ This article can be interesting not only for mathematicians, who are interested 
 We will start with simple ordinary differential equation (ODE) in the form of <br>
     <p align="center"><img 
       src="https://miro.medium.com/max/315/1*pvjvF0Q7YZa58BwFwCf77w.png"
-      alt="html5" width="160" height="50" /></p>
+      alt="html5" width="160" height="60" /></p>
 
 We are interested in finding a numerical solution on a grid, approximating it with some neural network architecture. In this article we will use very simple neural architecture that consists of a single input neuron (or two for 2D problems), one hidden layer and one output neuron to predict value of a solution in exact point on a grid.
 The main question is how to transform equation integration problem in optimization one, e.g. minimizing the error between analytical (if it exists) and numerical solution, taking into account initial (IC) and boundary (BC) conditions. In paper (1) we can see that problem is transformed into the following system of equations:
