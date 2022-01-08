@@ -17,14 +17,14 @@ This article can be interesting not only for mathematicians, who are interested 
 We will start with simple ordinary differential equation (ODE) in the form of <br>
     <p align="center"><img 
       src="https://miro.medium.com/max/315/1*pvjvF0Q7YZa58BwFwCf77w.png"
-      alt="html5" width="160" height="60" /></p>
+      alt="html5" width="160" height="55" /></p>
 
 We are interested in finding a numerical solution on a grid, approximating it with some neural network architecture. In this article we will use very simple neural architecture that consists of a single input neuron (or two for 2D problems), one hidden layer and one output neuron to predict value of a solution in exact point on a grid.
 The main question is how to transform equation integration problem in optimization one, e.g. minimizing the error between analytical (if it exists) and numerical solution, taking into account initial (IC) and boundary (BC) conditions. In paper (1) we can see that problem is transformed into the following system of equations:
 
 <p align="center"><img 
       src="https://miro.medium.com/max/700/1*1oHXOKs3nGmq1mL6HcFlOg.png"
-      alt="html5" width="395" height="60" /></p>
+      alt="html5" width="435" height="100" /></p>
 
 In the proposed approach the trial solution Ψt employs a feedforward neural network and the parameters p correspond to the weights and biases of the neural architecture. In this work we omit biases for simplicity. We choose a form for the trial function Ψt(x) such that by construction satisfies the BCs. This is achieved by writing it as a sum of two terms:
 
@@ -35,7 +35,7 @@ where N(x, p) is a neural network of arbitrary architecture, weights of wich sho
 
 <p align="center"><img 
       src="https://miro.medium.com/max/427/1*yEQdMhnQ8idkk6XgYKVjsQ.png"
-      alt="html5" width="250" height="40" /></p>
+      alt="html5" width="209" height="40" /></p>
 
 And particular minimization problem to be solved is:
 
