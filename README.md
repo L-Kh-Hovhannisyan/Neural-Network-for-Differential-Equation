@@ -1,6 +1,5 @@
-## Ordinary differential equation
-
-This article can be interesting not only for mathematicians, who are interested in some fluid dynamics modelling, but for computer scientists, because there will be shown computational properties of neural networks and some useful computational differentiation tricks. You can extend approach described here to solve other modelling problems with DEs, linear ot non-linear equation systems and almost everywhere, where robust numerical solution is preferred.
+Work completed as part of Differential equations classes at <a href="https://shsu.am/en/">Sirak State University</a>
+This article can be interesting not only for mathematicians, who are interested in some fluid dynamics modelling, but for computer scientists, because there will be shown computational properties of neural networks and some useful computational differentiation tricks.
 
 <img align="right" alt="GIF" src="https://miro.medium.com/max/600/1*Xo89I7rPk3uyy9b4a_y4qg.gif" />
 
